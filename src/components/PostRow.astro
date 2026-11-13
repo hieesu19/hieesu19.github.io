@@ -1,0 +1,20 @@
+---
+import type { Post } from '../lib/posts';
+import { displayDate, categoryName, categoryPath, sectionOf, urlOf } from '../lib/posts';
+interface Props { post: Post; withThumb?: boolean; }
+const { post, withThumb = true } = Astro.props;
+const section = sectionOf(post);
+const path = categoryPath(post);
+const formatted = displayDate(post.data.date);
+const categoryLabel = path.includes('/') ? categoryName(path) : categoryName(section);
+---
+<a class="post-row" href={urlOf(post)}>
+  <div class="post-row-date">{formatted.slice(0, 5)}<span>{formatted.slice(-4)}</span></div>
+  <div class="post-row-body">
+    <span class="post-brow">{categoryName(section)} <span class="sep">/</span> {categoryLabel}</span>
+    <h3>{post.data.title}</h3><p>{post.data.description}</p>
+  </div>
+  {withThumb && post.data.image
+    ? <div class="post-row-img"><img src={`/assets/photos/${post.data.image}.jpg`} alt="" loading="lazy"/></div>
+    : <span class="post-row-arrow">↗</span>}
+</a>

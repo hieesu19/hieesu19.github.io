@@ -1,0 +1,21 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import PostRow from './PostRow.astro';
+import PhotoGrid from './PhotoGrid.astro';
+import { allPosts, categoryName, categoryPath, categoryUrl, postsInCategory, urlOf } from '../lib/posts';
+interface Props { category: string; }
+const { category } = Astro.props;
+const top = category.split('/')[0];
+const title = categoryName(category);
+const all = await allPosts();
+const posts = postsInCategory(all, category);
+---
+<SiteLayout title={title} section={top} currentPath={category}>
+  <div class="page-intro page-intro--simple"><h1>{title}<span class="period">.</span></h1></div>
+  {category === 'daily' && <section class="daily-feature" id="daily-gallery"><div class="daily-photo-top"><span class="eyebrow">photo journal</span><a href={categoryUrl('daily/photos')} class="more-link">View all photos ↗</a></div><PhotoGrid/><p class="photo-footnote">Sample photos.</p></section>}
+  {top === 'projects'
+   ? <div class="project-list" id="section-entries">{posts.map((p, i) => <a class="project-entry" href={urlOf(p)}><div class="project-entry-index">{String(i+1).padStart(2,'0')}</div><div class="project-entry-main"><div class="project-topline"><span class="status-dot"></span>{p.data.status || 'Project'}</div><h2>{p.data.title} <span>↗</span></h2><p>{p.data.description}</p><div class="project-stack">{p.data.stack ?? ''}</div></div></a>)}</div>
+   : top === 'book'
+   ? <div class="books-grid" id="section-entries">{posts.map(p => <a href={urlOf(p)} class="book-item"><div class={`book-cover cover-${p.data.tone || 'sand'}`} aria-hidden="true"><span class="book-cover-small">hieesu19's bookshelf</span><span class="book-cover-title">{p.data.bookTitle || p.data.title}</span><span class="book-cover-line"></span><span class="book-cover-author">{p.data.author ?? ''}</span></div><div class="book-data"><span class="book-state">{p.data.status ?? ''}</span><h2>{p.data.bookTitle || p.data.title}</h2><p>{p.data.author ?? ''}</p><span class="book-review-link">{categoryPath(p).split('/').includes('reviews') ? 'Read review' : 'Read notes'} <b>↗</b></span></div></a>)}</div>
+   : <div class={`post-list list-page ${top === 'daily' ? 'daily-list' : ''}`} id="section-entries">{posts.map(p => <PostRow post={p} withThumb={top === 'daily'}/>)}</div>}
+</SiteLayout>

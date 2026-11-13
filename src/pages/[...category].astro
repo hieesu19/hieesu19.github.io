@@ -1,0 +1,19 @@
+---
+import SectionPage from '../components/SectionPage.astro';
+import { allPosts, buildCategoryTree, flattenCategories } from '../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await allPosts();
+  const categories = flattenCategories(buildCategoryTree(posts));
+  const reserved = categories.filter(item => ['about', 'posts'].includes(item.path));
+  if (reserved.length) throw new Error(`Top-level folder name reserved by site: ${reserved.map(item=>item.path).join(', ')}`);
+  return categories.map(item => ({
+    params: { category: item.path },
+    props: { path: item.path },
+  }));
+}
+
+interface Props { path: string; }
+const { path } = Astro.props;
+---
+<SectionPage category={path}/>

@@ -1,0 +1,26 @@
+hieesu19 Blog V11 — thư mục động nhiều cấp
+==========================================
+
+1. Giải nén, mở thư mục hieesu19-astro-markdown-v11 bằng VS Code.
+2. Cài Node.js 24+, mở Terminal trong thư mục chứa package.json.
+3. Chạy: npm install
+4. Chạy: npm run dev
+5. Mở: http://localhost:4321
+
+THÊM MỤC TEMP:
+- Tạo: src/content/posts/temp/first-note.md
+- Copy nội dung từ examples/TEMP-example.md vào đó.
+- TEMP tự xuất hiện trong sidebar và trang /temp/.
+
+THÊM MỤC CON LỒNG NHIỀU CẤP:
+- Tạo: src/content/posts/projects/tools/ida/plugins/first-plugin.md
+- Copy nội dung từ examples/IDA-plugins-example.md vào đó.
+- Sidebar tự có: Projects > Tools > IDA > Plugins.
+- Click thư mục cha sẽ hiện cả các bài trong tất cả thư mục con.
+- Không cần chỉnh navigation.ts, pages hay JavaScript khi thêm folder.
+
+Chú ý:
+- Thư mục trống, hoặc chỉ có bài draft: true, sẽ không được hiển thị.
+- Các tên /about/ và /posts/ là đường dẫn hệ thống, không dùng làm thư mục cấp cao nhất.
+- Khi đẩy lên GitHub Pages, cấu hình Source = GitHub Actions.
+- Xem README.md để biết cấu trúc đầy đủ.

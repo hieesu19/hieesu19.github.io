@@ -1,0 +1,19 @@
+---
+import type { CategoryNode } from '../lib/posts';
+interface Props { item: CategoryNode; level?: number; currentPath?: string; }
+const { item, level = 0, currentPath = '' } = Astro.props;
+const hasChildren = item.children.length > 0;
+const isCurrent = currentPath === item.path;
+const expanded = isCurrent || currentPath.startsWith(item.path + '/');
+---
+<div class={`tree-node ${isCurrent ? 'is-active' : ''}`} data-path={item.path}>
+  <div class="tree-line">
+    {hasChildren
+      ? <button type="button" class="tree-switch" aria-label={`Toggle ${item.name}`} aria-expanded={String(expanded)}><span class="chev"></span></button>
+      : <span class="tree-spacer"></span>}
+    <a class="tree-link" href={item.href} aria-current={isCurrent ? 'page' : undefined}>{item.name}</a>
+  </div>
+  {hasChildren && <div class="tree-kids" hidden={!expanded}>
+    {item.children.map(child => <Astro.self item={child} level={level + 1} currentPath={currentPath}/>) }
+  </div>}
+</div>

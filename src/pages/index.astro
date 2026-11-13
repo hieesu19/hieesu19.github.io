@@ -1,0 +1,37 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import PostRow from '../components/PostRow.astro';
+import { allPosts, buildCategoryTree, categoryUrl, urlOf } from '../lib/posts';
+const posts=await allPosts();
+const latest=posts.slice(0,5);
+const sections=buildCategoryTree(posts);
+const reading=posts.find(p=>p.id==='book/notes/atomic-habits-reading-notes')
+  ?? posts.find(p=>p.id.startsWith('book/'));
+---
+<SiteLayout title="hieesu19" section="home">
+  <div class="home-page">
+    <div class="home-hero">
+      <div class="home-hero-copy">
+        <div class="overline">hieesu19 · Personal blog</div>
+        <h1>hieesu19</h1>
+        <p>Cybersecurity notes, personal projects, everyday life, and books.</p>
+        <div class="hero-actions"><a href="#recent-posts" class="quiet-cta">Posts <span>↓</span></a><a href="/about/" class="inline-cta">About me <span>→</span></a></div>
+      </div>
+      <figure class="hero-photo"><div class="hero-image-wrap"><img src="/assets/photos/coffee-notes.jpg" alt="Notebook and coffee on a wooden table"/></div><figcaption>Sample photo <span>2026</span></figcaption></figure>
+    </div>
+    <section class="home-four"><div class="section-heading simple"><h2>Sections</h2></div>
+      <div class="four-grid">
+        {sections.map(category => <a href={category.href} class="four-item"><span class="four-name">{category.name}<b>↗</b></span></a>)}
+      </div>
+    </section>
+    <section class="home-latest" id="recent-posts"><div class="section-heading simple"><h2>Recent posts</h2></div><div class="post-list">{latest.map(p=><PostRow post={p}/>)}</div></section>
+    <div class="home-bottom">
+      <div class="photostrip"><div class="section-heading simple"><h2>Photos</h2><a href={categoryUrl('daily/photos')} class="more-link">View all ↗</a></div><div class="triptych">
+        <button type="button" class="photo-trigger" data-photo="1" aria-label="View photo of an alley"><img src="/assets/photos/old-alley.jpg" alt="A quiet alley"/></button>
+        <button type="button" class="photo-trigger" data-photo="4" aria-label="View photo of a rainy street"><img src="/assets/photos/rainy-street.jpg" alt="Rainy street"/></button>
+        <button type="button" class="photo-trigger" data-photo="2" aria-label="View photo of a bookshop"><img src="/assets/photos/bookshop.jpg" alt="The bookshop"/></button>
+      </div><p class="photo-footnote">Sample photos for this preview.</p></div>
+      {reading && <div class="reading-mini"><h2>Currently reading</h2><div class="book-inline"><div class="book-cover mini cover-clay"><span>THE<br/>BOOK<br/>NOTES</span><small>a reading journal</small></div><div><div class="reading-status">READING</div><h3>{reading.data.bookTitle || reading.data.title}</h3><p>{reading.data.author ?? ''}</p><a href={urlOf(reading)}>Read notes ↗</a></div></div></div>}
+    </div>
+  </div>
+</SiteLayout>

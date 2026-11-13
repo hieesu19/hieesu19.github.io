@@ -1,0 +1,11 @@
+---
+import { photos } from '../lib/photos';
+interface Props { big?: boolean }
+const {big=false}=Astro.props;
+---
+<div class={`gallery-grid ${big?'gallery-big':''}`}>
+  {photos.map((p,i)=><button type="button" class={`gallery-shot shot-${i}`} data-photo={i} aria-label={`Open photo ${p.label}`}>
+    <img src={`/assets/photos/${p.file}.jpg`} alt={p.label} loading="lazy"/>
+    <span class="gallery-caption">{p.label} <small>↗</small></span>
+  </button>)}
+</div>
